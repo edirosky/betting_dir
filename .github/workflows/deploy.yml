@@ -1,35 +1,35 @@
- name: Deploy React App from main
+name: Deploy React App from main
 
- on:
-   push:
--    branches: [ dev ]
-+    branches: [ main ]
+on:
+  push:
+    branches: [ main ]
 
- jobs:
-   build-and-deploy:
-     runs-on: ubuntu-latest
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
-     steps:
--      - uses: actions/checkout@v3
--        with:
--          ref: dev
-+      - uses: actions/checkout@v3
-       # remove o bloco "with: ref" para ele usar a branch que disparou o workflow
+    steps:
+      # Faz checkout automático da branch que disparou o workflow (main)
+      - uses: actions/checkout@v3
 
-       - name: Setup Node.js
-         uses: actions/setup-node@v3
-         with:
-           node-version: '18'
+      # Prepara ambiente Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-       - name: Install dependencies
-         run: npm ci
+      # Instala dependências
+      - name: Install dependencies
+        run: npm ci
 
-       - name: Build
-         run: npm run build
+      # Gera o bundle estático em /dist
+      - name: Build
+        run: npm run build
 
-       - name: Deploy to gh-pages
-         uses: peaceiris/actions-gh-pages@v3
-         with:
-           github_token: ${{ secrets.GITHUB_TOKEN }}
-           publish_branch: gh-pages
-           publish_dir: ./dist
+      # Publica em gh-pages
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist

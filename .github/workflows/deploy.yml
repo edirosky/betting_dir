@@ -1,5 +1,11 @@
 name: Deploy React App from dev
 
+# Garante que o token do Actions terá escopo de escrita
+permissions:
+  contents: write   # permitir push de commits
+  pages: write      # permitir publicar no Pages
+  id-token: write   # necessário para alguns providers
+
 on:
   push:
     branches: [ dev ]
@@ -9,24 +15,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Faz checkout da branch que disparou (dev)
       - uses: actions/checkout@v3
 
-      # Prepara ambiente Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      # Instala dependências
       - name: Install dependencies
         run: npm ci
 
-      # Gera o build em /dist
       - name: Build
         run: npm run build
 
-      # Publica em gh-pages
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
